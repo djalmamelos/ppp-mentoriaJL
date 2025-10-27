@@ -1,0 +1,156 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de Prêmios e Sorteios",
+    "version": "1.0.0",
+    "description": "API para acompanhar estoque de prêmios e registrar sorteios"
+  },
+  "paths": {
+    "/api/auth/login": {
+      "post": {
+        "summary": "Login de admin",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" }
+                },
+                "required": ["username", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token retornado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "token": { "type": "string" } }
+                }
+              }
+            }
+          },
+          "401": { "description": "Credenciais invalidas" }
+        }
+      }
+    },
+    "/api/prizes": {
+      "post": {
+        "summary": "Criar prêmio com quantidade",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "quantity": { "type": "integer" }
+                },
+                "required": ["name", "quantity"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Prêmio criado" },
+          "400": { "description": "Payload inválido" },
+          "401": { "description": "Não autorizado" }
+        }
+      },
+      "get": {
+        "summary": "Listar prêmios com total em estoque",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Lista de prêmios" },
+          "401": { "description": "Não autorizado" }
+        }
+      }
+    },
+    "/api/prizes/{id}": {
+      "get": {
+        "summary": "Buscar dados de prêmio",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Detalhes do prêmio" },
+          "404": { "description": "Não encontrado" }
+        }
+      }
+    },
+    "/api/prizes/unit/{unitId}": {
+      "delete": {
+        "summary": "Deletar unidade do prêmio",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "unitId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "204": { "description": "Deletado" },
+          "404": { "description": "Unidade não encontrada" }
+        }
+      }
+    },
+    "/api/draws": {
+      "post": {
+        "summary": "Registrar prêmio sorteado (passar id da unidade)",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "unitId": { "type": "string" },
+                  "gender": { "type": "string" },
+                  "neighborhood": { "type": "string" },
+                  "program": { "type": "string" },
+                  "age": { "type": "integer" }
+                },
+                "required": ["unitId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Sorteio registrado" },
+          "400": { "description": "Payload inválido" },
+          "404": { "description": "Unidade não encontrada" }
+        }
+      },
+      "get": {
+        "summary": "Listar prêmios sorteados e agregados",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "200": { "description": "Lista com agregações" } }
+      }
+    },
+    "/api/draws/{id}": {
+      "delete": {
+        "summary": "Deletar sorteio e retornar unidade ao estoque",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "204": { "description": "Deletado e unidade retornada" },
+          "404": { "description": "Sorteio não encontrado" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" }
+    }
+  }
+}
