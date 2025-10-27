@@ -1,0 +1,72 @@
+<%- include('../partials/header') %>
+
+<div class="container">
+  <h1 class="title">Detalhes do Prêmio</h1>
+
+  <% if (error) { %>
+    <div class="notification is-danger">
+      <%= error %>
+    </div>
+  <% } %>
+
+  <div class="box">
+    <h2 class="subtitle">
+      <%= prize.name %>
+      <span class="tag is-info is-medium">
+        <%= prize.units.length %> unidades em estoque
+      </span>
+    </h2>
+
+    <% if (prize.units.length > 0) { %>
+      <div class="table-container">
+        <table class="table is-fullwidth">
+          <thead>
+            <tr>
+              <th>ID da Unidade</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% prize.units.forEach(unit => { %>
+              <tr>
+                <td><%= unit.id %></td>
+                <td>
+                  <div class="buttons are-small">
+                    <form action="/prizes/unit/<%= unit.id %>" method="POST" style="display: inline;">
+                      <input type="hidden" name="_method" value="DELETE">
+                      <button class="button is-danger is-small" onclick="return confirm('Tem certeza que deseja excluir esta unidade?')">
+                        Excluir
+                      </button>
+                    </form>
+                    <a href="/draws/new?unitId=<%= unit.id %>" class="button is-success is-small">
+                      Registrar Sorteio
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <div class="notification">
+        Não há unidades em estoque.
+      </div>
+    <% } %>
+
+    <div class="field">
+      <div class="control">
+        <a href="/prizes" class="button is-light">Voltar</a>
+        <% if (prize.units.length === 0) { %>
+          <form action="/prizes/<%= prize.id %>/delete" method="POST" style="display:inline; margin-left: 1rem;">
+            <button class="button is-danger" onclick="return confirm('Excluir permanentemente este prêmio? Esta ação não pode ser desfeita.')">Excluir Prêmio</button>
+          </form>
+        <% } else { %>
+          <button class="button is-danger" disabled title="Existem unidades no estoque. Remova-as antes de excluir o prêmio.">Excluir Prêmio</button>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

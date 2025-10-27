@@ -1,0 +1,142 @@
+<%- include('../partials/header') %>
+
+<div class="container">
+  <h1 class="title">Sorteios Realizados</h1>
+
+  <% if (error) { %>
+    <div class="notification is-danger">
+      <%= error %>
+    </div>
+  <% } %>
+
+  <div class="columns">
+    <div class="column">
+      <div class="box">
+        <h2 class="subtitle">Por Gênero</h2>
+        <table class="table is-fullwidth">
+          <thead>
+            <tr>
+              <th>Gênero</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for (const [gender, count] of Object.entries(totals.gender)) { %>
+              <tr>
+                <td><%= gender %></td>
+                <td><%= count %></td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="box">
+        <h2 class="subtitle">Por Faixa Etária</h2>
+        <table class="table is-fullwidth">
+          <thead>
+            <tr>
+              <th>Faixa</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for (const [range, count] of Object.entries(totals.ageGroup)) { %>
+              <tr>
+                <td><%= range %></td>
+                <td><%= count %></td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="columns">
+    <div class="column">
+      <div class="box">
+        <h2 class="subtitle">Por Programa</h2>
+        <table class="table is-fullwidth">
+          <thead>
+            <tr>
+              <th>Programa</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for (const [program, count] of Object.entries(totals.program)) { %>
+              <tr>
+                <td><%= program %></td>
+                <td><%= count %></td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="box">
+        <h2 class="subtitle">Por Bairro</h2>
+        <table class="table is-fullwidth">
+          <thead>
+            <tr>
+              <th>Bairro</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for (const [neighborhood, count] of Object.entries(totals.neighborhood)) { %>
+              <tr>
+                <td><%= neighborhood %></td>
+                <td><%= count %></td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="box">
+    <h2 class="subtitle">Lista de Sorteios</h2>
+    <div class="table-container">
+      <table class="table is-fullwidth">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Gênero</th>
+            <th>Idade</th>
+            <th>Bairro</th>
+            <th>Programa</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% draws.forEach(draw => { %>
+            <tr>
+              <td><%= new Date(draw.createdAt).toLocaleString() %></td>
+              <td><%= draw.gender %></td>
+              <td><%= draw.age %></td>
+              <td><%= draw.neighborhood %></td>
+              <td><%= draw.program %></td>
+              <td>
+                <form action="/draws/<%= draw.id %>" method="POST" style="display: inline;">
+                  <input type="hidden" name="_method" value="DELETE">
+                  <button class="button is-danger is-small" onclick="return confirm('Tem certeza que deseja excluir este sorteio? A unidade voltará ao estoque.')">
+                    Excluir
+                  </button>
+                </form>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

@@ -85,6 +85,18 @@
           "200": { "description": "Detalhes do prêmio" },
           "404": { "description": "Não encontrado" }
         }
+      },
+      "delete": {
+        "summary": "Deletar prêmio (hard delete) — disponível apenas se não houver unidades em estoque",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "204": { "description": "Prêmio deletado" },
+          "400": { "description": "Prêmio possui unidades em estoque" },
+          "404": { "description": "Prêmio não encontrado" }
+        }
       }
     },
     "/api/prizes/unit/{unitId}": {

@@ -4,7 +4,8 @@ const prizeController = require('../controllers/prizeController');
 
 router.post('/', prizeController.createPrize);
 router.get('/', prizeController.listPrizes);
-router.get('/:id', prizeController.getPrize);
 router.delete('/unit/:unitId', prizeController.deleteUnit);
+router.get('/:id', prizeController.getPrize);
+router.delete('/:id', prizeController.deletePrize);
 
 module.exports = router;

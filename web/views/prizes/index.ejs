@@ -1,0 +1,42 @@
+<%- include('../partials/header') %>
+
+<div class="container">
+  <h1 class="title">Prêmios</h1>
+  
+  <div class="buttons">
+    <a href="/prizes/new" class="button is-primary">Novo Prêmio</a>
+  </div>
+
+  <% if (error) { %>
+    <div class="notification is-danger">
+      <%= error %>
+    </div>
+  <% } %>
+
+  <div class="table-container">
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Total em Estoque</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% prizes.forEach(prize => { %>
+          <tr>
+            <td><%= prize.name %></td>
+            <td><%= prize.total %></td>
+            <td>
+              <div class="buttons are-small">
+                <a href="/prizes/<%= prize.id %>" class="button is-info">Detalhes</a>
+              </div>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

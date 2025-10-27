@@ -31,4 +31,12 @@ const deleteUnit = (req, res) => {
   return res.status(204).send();
 };
 
-module.exports = { createPrize, listPrizes, getPrize, deleteUnit };
+const deletePrize = (req, res) => {
+  const prizeId = req.params.id;
+  const result = prizeService.deletePrize(prizeId);
+  if (!result) return res.status(404).json({ error: 'not_found' });
+  if (result && result.error === 'prize_has_units') return res.status(400).json({ error: 'prize_has_units' });
+  return res.status(204).send();
+};
+
+module.exports = { createPrize, listPrizes, getPrize, deleteUnit, deletePrize };

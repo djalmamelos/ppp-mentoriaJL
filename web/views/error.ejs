@@ -1,0 +1,19 @@
+<%- include('partials/header') %>
+
+<div class="container">
+  <div class="notification is-danger">
+    <p class="title">Erro</p>
+    <p><%= message %></p>
+    <% if (error) { %>
+      <p class="help"><%= error %></p>
+    <% } %>
+  </div>
+
+  <div class="field">
+    <div class="control">
+      <a href="javascript:history.back()" class="button is-light">Voltar</a>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,38 @@
+<%- include('../partials/header') %>
+
+<div class="container">
+  <h1 class="title">Novo Prêmio</h1>
+
+  <% if (error) { %>
+    <div class="notification is-danger">
+      <%= error %>
+    </div>
+  <% } %>
+
+  <form action="/prizes" method="POST">
+    <div class="field">
+      <label class="label">Nome do Prêmio</label>
+      <div class="control">
+        <input class="input" type="text" name="name" placeholder="Digite o nome do prêmio" required>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Quantidade</label>
+      <div class="control">
+        <input class="input" type="number" name="quantity" min="1" placeholder="Digite a quantidade" required>
+      </div>
+    </div>
+
+    <div class="field is-grouped">
+      <div class="control">
+        <button class="button is-primary">Criar Prêmio</button>
+      </div>
+      <div class="control">
+        <a href="/prizes" class="button is-light">Cancelar</a>
+      </div>
+    </div>
+  </form>
+</div>
+
+<%- include('../partials/footer') %>

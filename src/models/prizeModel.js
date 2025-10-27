@@ -42,6 +42,16 @@ const addUnitToPrize = (prizeId, count = 1) => {
   return added;
 };
 
+const deletePrizeById = (prizeId) => {
+  const prizeIdx = db.prizes.findIndex(p => p.id === prizeId);
+  if (prizeIdx === -1) return null;
+  // only allow delete if no units exist for this prize
+  const unitsCount = db.units.filter(u => u.prizeId === prizeId).length;
+  if (unitsCount > 0) return { error: 'prize_has_units' };
+  const [prize] = db.prizes.splice(prizeIdx, 1);
+  return prize;
+};
+
 module.exports = {
   createPrize,
   listPrizesWithTotal,
@@ -49,4 +59,5 @@ module.exports = {
   findUnitById,
   deleteUnitById,
   addUnitToPrize
+  ,deletePrizeById
 };
