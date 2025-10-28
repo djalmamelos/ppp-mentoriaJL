@@ -1,6 +1,9 @@
 # API de Prêmios e Sorteios
 
 Projeto simples em Node.js/Express para acompanhar estoque de prêmios (unidades) e registrar sorteios.
+# API de Prêmios e Sorteios
+
+Projeto simples em Node.js/Express para acompanhar estoque de prêmios (unidades) e registrar sorteios.
 
 Principais características
 - Registro de admin (seeded: username: admin, password: admin)
@@ -22,28 +25,105 @@ Como executar
 npm install
 ```
 
-2. Inicie o servidor
+# PPP - Aplicação de Prêmios e Sorteios
+
+Este repositório contém uma API REST (Node.js + Express) e uma aplicação web (Express + EJS) para gerenciar prêmios (estoque por unidades) e registrar sorteios.
+
+Resumo rápido
+- API: expõe endpoints protegidos por JWT para gerir prêmios, unidades e sorteios.
+- Web: frontend EJS que consome a API (rotas em `web/`) com páginas para login, gerenciamento de prêmios e visualização/edição de sorteios.
+- Banco de dados em memória: dados não são persistidos entre reinícios (útil para demos e testes).
+
+Arquitetura
+- `src/` - código da API (rotas, controllers, models, middleware)
+- `web/` - aplicação web (views EJS, rotas do cliente, assets em `web/public`)
+- `resources/` - documentação Swagger (OpenAPI)
+
+Principais funcionalidades implementadas
+- Autenticação: login via API que retorna JWT; frontend guarda token em sessão.
+- Gestão de prêmios: criar prêmio com quantidade (cada unidade é um objeto único), listar, ver detalhes.
+- Gestão de unidades: excluir unidade específica; adicionar unidade (retornar unidade ao estoque quando um sorteio é deletado).
+- Sorteios: registrar sorteio (consome uma unidade), listar sorteios com agregações (por gênero, bairro, programa, faixa etária e por prêmio), deletar sorteio (unidade volta ao estoque), editar metadados do sorteio (gênero, bairro, programa, idade).
+- Endpoints adicionais: reatribuir unidade a outro prêmio (PATCH `/api/prizes/unit/:unitId`) — disponível para casos de manutenção.
+
+Credenciais seed (in-memory)
+- Usuário admin criado automaticamente ao iniciar a API:
+	- username: `julio.lima`
+	- password: `trakinas`
+
+Ports padrão
+- API: http://localhost:3000
+- Web: http://localhost:4000
+
+Como rodar (desenvolvimento)
+1. Instale dependências (no diretório raiz):
 
 ```bash
-npm start
+npm install
 ```
 
-O servidor roda por padrão em http://localhost:3000
+2. Inicie a API:
 
-Endpoints principais
-- POST /api/auth/login -> { username, password } => { token }
-- POST /api/prizes -> (protected) { name, quantity }
-- GET /api/prizes -> (protected) lista com total
-- GET /api/prizes/:id -> (protected) detalhes do prêmio e unidades
-- DELETE /api/prizes/unit/:unitId -> (protected) remove unidade
-- POST /api/draws -> (protected) { unitId, gender, neighborhood, program, age }
-- GET /api/draws -> (protected) lista de sorteios + agregações
-- DELETE /api/draws/:id -> (protected) deleta sorteio e retorna unidade ao estoque
+```bash
+npm run start-api
+```
 
-Swagger
+3. Inicie a aplicação web (consome a API local):
 
-Abra http://localhost:3000/docs para visualizar a documentação Swagger UI.
+```bash
+npm run start-web
+```
 
-Notas
-- Banco em memória: os dados são perdidos quando o processo é reiniciado.
-- Para simplicidade o admin inicial tem senha em texto. Em produção, use hashing e variáveis de ambiente seguras.
+Scripts (em package.json)
+- `start-api` - inicia a API em `src/index.js` (porta 3000)
+- `start-web` - inicia a aplicação web em `web/index.js` (porta 4000)
+- `dev` - atalho para nodemon (se instalado globalmente ou como dependência de dev)
+
+API (endpoints principais)
+- POST `/api/auth/login` -> { username, password } => { token }
+
+- Prêmios
+	- POST `/api/prizes` -> (protected) { name, quantity }
+	- GET `/api/prizes` -> (protected) lista de prêmios com total em estoque
+	- GET `/api/prizes/:id` -> (protected) detalhes do prêmio e unidades relacionadas
+	- DELETE `/api/prizes/:id` -> (protected) hard delete (só se não houver unidades em estoque)
+
+	- DELETE `/api/prizes/unit/:unitId` -> (protected) remover uma unidade específica
+	- PATCH `/api/prizes/unit/:unitId` -> (protected) reatribuir uma unidade a outro prêmio (body: { prizeId })
+
+- Sorteios
+	- POST `/api/draws` -> (protected) registrar um sorteio: { unitId, gender, neighborhood, program, age }
+	- GET `/api/draws` -> (protected) lista de sorteios + agregações (gender, neighborhood, program, age groups, por prêmio)
+	- DELETE `/api/draws/:id` -> (protected) deleta sorteio e retorna unidade ao estoque
+	- PATCH `/api/draws/:id` -> (protected) atualiza metadados do sorteio (gender, neighborhood, program, age)
+
+Documentação
+- Swagger UI disponível em: http://localhost:3000/docs (carrega `resources/swagger.json`)
+
+Web (frontend)
+- A interface web está em `web/` e consome a API via axios.
+- Rotas principais:
+	- GET `/` (login)
+	- POST `/login` (envia credenciais para a API e salva token em sessão)
+	- GET `/prizes` (lista de prêmios)
+	- GET `/prizes/:id` (detalhes do prêmio e unidades)
+	- GET `/draws` (lista de sorteios, com colunas, ações de excluir e editar)
+	- GET `/draws/new?unitId=...` (registrar sorteio)
+	- GET `/draws/:id/edit` (editar metadados do sorteio — formulário igual ao de registrar)
+
+Observações e limitações
+- Banco em memória (arquivo `src/db/inMemoryDb.js`): tudo é reiniciado quando o processo termina.
+- Usuário admin está em texto (seed). Em produção, troque por um armazenamento persistente e hashing de senhas.
+- A imagem de logo e os assets estão servidos a partir de `web/public` (ver `web/index.js` que configura `express.static`).
+
+Próximos passos sugeridos
+- Persistência: migrar para um banco (SQLite/Postgres) para manter dados entre reinícios.
+- Autorização: adicionar níveis de permissão se necessário.
+- Auditoria: registrar logs de exclusões (especialmente hard deletes e reatribuições de unidades).
+- Testes automatizados: adicionar testes unitários/integrados para endpoints críticos.
+
+Contato / Créditos
+- Desenvolvedor: código criado no escopo da mentoria.
+
+Licença
+- MIT

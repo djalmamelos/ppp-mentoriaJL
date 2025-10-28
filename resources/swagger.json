@@ -110,6 +110,32 @@
           "204": { "description": "Deletado" },
           "404": { "description": "Unidade não encontrada" }
         }
+      },
+      "patch": {
+        "summary": "Reatribuir unidade para outro prêmio",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "unitId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "prizeId": { "type": "string" }
+                },
+                "required": ["prizeId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Unidade atualizada" },
+          "400": { "description": "Payload inválido" },
+          "404": { "description": "Unidade ou prêmio não encontrado" }
+        }
       }
     },
     "/api/draws": {
@@ -155,6 +181,34 @@
         ],
         "responses": {
           "204": { "description": "Deletado e unidade retornada" },
+          "404": { "description": "Sorteio não encontrado" }
+        }
+      },
+      "patch": {
+        "summary": "Atualizar metadados do sorteio (gender, neighborhood, program, age)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "gender": { "type": "string" },
+                  "neighborhood": { "type": "string" },
+                  "program": { "type": "string" },
+                  "age": { "type": "integer" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Sorteio atualizado" },
+          "400": { "description": "Payload inválido" },
           "404": { "description": "Sorteio não encontrado" }
         }
       }
