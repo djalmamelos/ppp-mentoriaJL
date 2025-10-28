@@ -2,6 +2,22 @@ const prizeService = require('../services/prizeService');
 const prizeModel = require('../models/prizeModel');
 const drawModel = require('../models/drawModel');
 
+const updatePrize = (req, res) => {
+  const id = req.params.id;
+  const { name } = req.body;
+  
+  if (!name) {
+    return res.status(400).json({ error: 'name_required' });
+  }
+
+  const updated = prizeModel.updatePrize(id, { name });
+  if (!updated) {
+    return res.status(404).json({ error: 'prize_not_found' });
+  }
+
+  return res.json(updated);
+};
+
 const createPrize = (req, res) => {
   const { name, quantity } = req.body;
   if (!name || !Number.isInteger(quantity) || quantity < 0) {
@@ -40,25 +56,4 @@ const deletePrize = (req, res) => {
   return res.status(204).send();
 };
 
-const updateUnit = (req, res) => {
-  const unitId = req.params.unitId;
-  const { prizeId } = req.body;
-  if (!prizeId) return res.status(400).json({ error: 'prizeId_required' });
-  const unit = prizeModel.findUnitById(unitId);
-  if (!unit) return res.status(404).json({ error: 'unit_not_found' });
-  const prize = prizeModel.findPrizeById(prizeId);
-  if (!prize) return res.status(404).json({ error: 'prize_not_found' });
-
-  const updated = prizeService.updateUnit(unitId, prizeId);
-  if (!updated) return res.status(500).json({ error: 'update_failed' });
-
-  // Update any draws that reference this unit so their prizeId stays consistent
-  const draws = drawModel.listDraws();
-  draws.forEach(d => {
-    if (d.unitId === unitId) d.prizeId = prizeId;
-  });
-
-  return res.json(updated);
-};
-
-module.exports = { createPrize, listPrizes, getPrize, deleteUnit, deletePrize, updateUnit };
+module.exports = { createPrize, listPrizes, getPrize, deleteUnit, deletePrize, updatePrize };

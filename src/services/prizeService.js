@@ -11,12 +11,6 @@ const deleteUnit = (unitId) => prizeModel.deleteUnitById(unitId);
 
 const deletePrize = (prizeId) => prizeModel.deletePrizeById(prizeId);
 
-const updateUnit = (unitId, newPrizeId) => {
-  const prize = prizeModel.findPrizeById(newPrizeId);
-  if (!prize) return null;
-  return prizeModel.updateUnitPrize(unitId, newPrizeId);
-};
-
 const returnUnitFromDraw = (unit) => {
   // just push back the unit
   const added = prizeModel.addUnitToPrize(unit.prizeId, 1);
