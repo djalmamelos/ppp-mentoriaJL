@@ -1,0 +1,64 @@
+<%- include('../partials/header') %>
+
+<div class="container">
+  <h1 class="title">Editar Sorteio</h1>
+
+  <% if (error) { %>
+    <div class="notification is-danger"><%= error %></div>
+  <% } %>
+
+  <div class="box">
+    <form action="/draws/<%= draw.id %>" method="POST">
+      <input type="hidden" name="_method" value="PATCH">
+
+      <div class="field">
+        <label class="label">Gênero</label>
+        <div class="control">
+          <div class="select">
+            <select name="gender" required>
+              <option value="">Selecione o gênero</option>
+              <option value="M" <%= draw.gender === 'M' ? 'selected' : '' %>>Masculino</option>
+              <option value="F" <%= draw.gender === 'F' ? 'selected' : '' %>>Feminino</option>
+              <option value="O" <%= draw.gender === 'O' ? 'selected' : '' %>>Outro</option>
+            </select>
+          </div>
+          <p class="help">Gênero do ganhador(a)</p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Bairro</label>
+        <div class="control">
+          <input class="input" type="text" name="neighborhood" value="<%= draw.neighborhood || '' %>" placeholder="Digite o bairro do ganhador(a)" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Programa</label>
+        <div class="control">
+          <input class="input" type="text" name="program" value="<%= draw.program || '' %>" placeholder="Digite o nome do programa de rádio" required>
+          <p class="help">Programa onde o prêmio foi sorteado</p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Idade</label>
+        <div class="control">
+          <input class="input" type="number" name="age" min="0" max="120" value="<%= draw.age || '' %>" placeholder="Digite a idade do ganhador(a)" required>
+          <p class="help">Idade do ganhador(a) para estatísticas</p>
+        </div>
+      </div>
+
+      <div class="field is-grouped">
+        <div class="control">
+          <button class="button is-primary" type="submit">Salvar</button>
+        </div>
+        <div class="control">
+          <a href="/draws" class="button is-light">Cancelar</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

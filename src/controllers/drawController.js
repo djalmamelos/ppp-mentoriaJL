@@ -28,19 +28,42 @@ const createDraw = (req, res) => {
   return res.status(201).json(draw);
 };
 
+const updateDraw = (req, res) => {
+  const id = req.params.id;
+  const { gender, neighborhood, program, age } = req.body;
+  const updates = {};
+  if (gender !== undefined) updates.gender = gender;
+  if (neighborhood !== undefined) updates.neighborhood = neighborhood;
+  if (program !== undefined) updates.program = program;
+  if (age !== undefined) updates.age = (age === '' ? undefined : Number(age));
+
+  const updated = require('../models/drawModel').updateDrawById(id, updates);
+  if (!updated) return res.status(404).json({ error: 'draw_not_found' });
+  return res.json(updated);
+};
+
 const listDraws = (req, res) => {
-  const draws = drawModel.listDraws();
+  const draws = drawModel.listDraws().map(draw => {
+    const prize = prizeModel.findPrizeById(draw.prizeId);
+    return {
+      ...draw,
+      prizeName: prize ? prize.name : 'Prêmio Removido'
+    };
+  });
+  
   // aggregate totals by parameters
   const totals = {
     gender: {},
     neighborhood: {},
     program: {},
-    ageGroup: {}
+    ageGroup: {},
+    prizes: {}
   };
   draws.forEach(d => {
     if (d.gender) totals.gender[d.gender] = (totals.gender[d.gender] || 0) + 1;
     if (d.neighborhood) totals.neighborhood[d.neighborhood] = (totals.neighborhood[d.neighborhood] || 0) + 1;
     if (d.program) totals.program[d.program] = (totals.program[d.program] || 0) + 1;
+    if (d.prizeName) totals.prizes[d.prizeName] = (totals.prizes[d.prizeName] || 0) + 1;
     const ag = ageGroup(d.age);
     totals.ageGroup[ag] = (totals.ageGroup[ag] || 0) + 1;
   });
@@ -59,4 +82,4 @@ const deleteDraw = (req, res) => {
   return res.status(204).send();
 };
 
-module.exports = { createDraw, listDraws, deleteDraw };
+module.exports = { createDraw, listDraws, deleteDraw, updateDraw };

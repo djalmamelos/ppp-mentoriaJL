@@ -12,7 +12,7 @@ app.use(session({
 }));
 
 // Static files and JSON parsing
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

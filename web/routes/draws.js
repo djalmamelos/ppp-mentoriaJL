@@ -33,6 +33,27 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/:id/edit', async (req, res) => {
+  try {
+    const [{ data: drawsData }, { data: prizesData }] = await Promise.all([
+      authAxios(req.session.token).get('/draws'),
+      authAxios(req.session.token).get('/prizes')
+    ]);
+
+    const draw = drawsData.draws.find(d => d.id === req.params.id);
+    if (!draw) return res.redirect('/draws');
+
+    return res.render('draws/edit', {
+      draw,
+      prizes: prizesData,
+      error: null
+    });
+  } catch (err) {
+    console.error(err);
+    return res.redirect('/draws');
+  }
+});
+
 router.get('/new', (req, res) => {
   res.render('draws/new', { 
     unitId: req.query.unitId,
@@ -69,6 +90,16 @@ router.post('/:id', async (req, res) => {
   try {
     if (req.body._method === 'DELETE') {
       await authAxios(req.session.token).delete(`/draws/${req.params.id}`);
+    }
+    if (req.body._method === 'PATCH') {
+      // update draw metadata (gender, neighborhood, program, age)
+      const payload = {
+        gender: req.body.gender,
+        neighborhood: req.body.neighborhood,
+        program: req.body.program,
+        age: req.body.age
+      };
+      await authAxios(req.session.token).patch(`/draws/${req.params.id}`, payload);
     }
     res.redirect('/draws');
   } catch (error) {

@@ -101,6 +101,30 @@
     </div>
   </div>
 
+  <div class="columns">
+    <div class="column">
+      <div class="box">
+        <h2 class="subtitle">Por Prêmio</h2>
+        <table class="table is-fullwidth">
+          <thead>
+            <tr>
+              <th>Prêmio</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for (const [prize, count] of Object.entries(totals.prizes)) { %>
+              <tr>
+                <td><%= prize %></td>
+                <td><%= count %></td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
   <div class="box">
     <h2 class="subtitle">Lista de Sorteios</h2>
     <div class="table-container">
@@ -108,6 +132,7 @@
         <thead>
           <tr>
             <th>Data</th>
+            <th>Prêmio</th>
             <th>Gênero</th>
             <th>Idade</th>
             <th>Bairro</th>
@@ -119,6 +144,7 @@
           <% draws.forEach(draw => { %>
             <tr>
               <td><%= new Date(draw.createdAt).toLocaleString() %></td>
+              <td><%= draw.prizeName %></td>
               <td><%= draw.gender %></td>
               <td><%= draw.age %></td>
               <td><%= draw.neighborhood %></td>
@@ -130,6 +156,7 @@
                     Excluir
                   </button>
                 </form>
+                <a href="/draws/<%= draw.id %>/edit" class="button is-info is-small" style="margin-left:0.5rem;">Editar</a>
               </td>
             </tr>
           <% }); %>

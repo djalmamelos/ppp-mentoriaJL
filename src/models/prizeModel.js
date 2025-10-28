@@ -42,6 +42,13 @@ const addUnitToPrize = (prizeId, count = 1) => {
   return added;
 };
 
+const updateUnitPrize = (unitId, newPrizeId) => {
+  const unit = db.units.find(u => u.id === unitId);
+  if (!unit) return null;
+  unit.prizeId = newPrizeId;
+  return unit;
+};
+
 const deletePrizeById = (prizeId) => {
   const prizeIdx = db.prizes.findIndex(p => p.id === prizeId);
   if (prizeIdx === -1) return null;
@@ -59,5 +66,6 @@ module.exports = {
   findUnitById,
   deleteUnitById,
   addUnitToPrize
-  ,deletePrizeById
+  ,deletePrizeById,
+  updateUnitPrize
 };

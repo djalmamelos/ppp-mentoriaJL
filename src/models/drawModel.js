@@ -18,4 +18,15 @@ const deleteDrawById = (id) => {
   return draw;
 };
 
-module.exports = { createDraw, listDraws, findDrawById, deleteDrawById };
+const updateDrawById = (id, updates = {}) => {
+  const draw = db.draws.find(d => d.id === id);
+  if (!draw) return null;
+  // allowed updates: gender, neighborhood, program, age
+  const allowed = ['gender', 'neighborhood', 'program', 'age'];
+  allowed.forEach(k => {
+    if (updates[k] !== undefined) draw[k] = updates[k];
+  });
+  return draw;
+};
+
+module.exports = { createDraw, listDraws, findDrawById, deleteDrawById, updateDrawById };

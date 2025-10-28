@@ -22,14 +22,14 @@
         <table class="table is-fullwidth">
           <thead>
             <tr>
-              <th>ID da Unidade</th>
+              <th>Prêmio</th>
               <th>Ações</th>
             </tr>
           </thead>
           <tbody>
             <% prize.units.forEach(unit => { %>
               <tr>
-                <td><%= unit.id %></td>
+                <td><%= prize.name %> (<%= prize.units.indexOf(unit) + 1 %>)</td>
                 <td>
                   <div class="buttons are-small">
                     <form action="/prizes/unit/<%= unit.id %>" method="POST" style="display: inline;">
