@@ -9,7 +9,7 @@ const db = {
 
 // seed admin
 const seedAdmin = () => {
-  const admin = { id: uuidv4(), username: 'julio.lima', password: 'trakinas' };
+  const admin = { id: uuidv4(), username: 'admin', password: '123456' };
   db.users.push(admin);
 };
 
