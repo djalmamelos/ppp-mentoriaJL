@@ -10,12 +10,25 @@
   <% } %>
 
   <div class="box">
-    <h2 class="subtitle">
-      <%= prize.name %>
-      <span class="tag is-info is-medium">
-        <%= prize.units.length %> unidades em estoque
-      </span>
-    </h2>
+    <div class="level">
+      <div class="level-left">
+        <div class="level-item">
+          <h2 class="subtitle">
+            <%= prize.name %>
+            <span class="tag is-info is-medium">
+              <%= prize.units.length %> unidades em estoque
+            </span>
+          </h2>
+        </div>
+      </div>
+      <div class="level-right">
+        <div class="level-item">
+          <a href="/prizes/<%= prize.id %>/edit" class="button is-primary">
+            <span>Editar Prêmio</span>
+          </a>
+        </div>
+      </div>
+    </div>
 
     <% if (prize.units.length > 0) { %>
       <div class="table-container">

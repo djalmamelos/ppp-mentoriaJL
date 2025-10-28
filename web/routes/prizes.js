@@ -36,6 +36,39 @@ router.get('/new', (req, res) => {
   res.render('prizes/new', { error: null });
 });
 
+router.get('/:id/edit', async (req, res) => {
+  try {
+    const { data: prize } = await authAxios(req.session.token).get(`/prizes/${req.params.id}`);
+    res.render('prizes/edit', { prize, error: null });
+  } catch (error) {
+    res.redirect('/prizes');
+  }
+});
+
+router.post('/:id', async (req, res) => {
+  try {
+    if (req.body._method === 'PATCH') {
+      const payload = {
+        name: req.body.name
+      };
+      
+      if (!payload.name) {
+        throw new Error('Nome é obrigatório');
+      }
+
+      await authAxios(req.session.token).patch(`/prizes/${req.params.id}`, payload);
+      return res.redirect(`/prizes/${req.params.id}`);
+    }
+  } catch (error) {
+    console.error('Erro ao atualizar prêmio:', error.response?.data || error.message);
+    const { data: prize } = await authAxios(req.session.token).get(`/prizes/${req.params.id}`);
+    return res.render('prizes/edit', {
+      prize,
+      error: 'Erro ao atualizar prêmio: ' + (error.response?.data?.error || error.message)
+    });
+  }
+});
+
 router.post('/:id/delete', async (req, res) => {
   try {
     await authAxios(req.session.token).delete(`/prizes/${req.params.id}`);

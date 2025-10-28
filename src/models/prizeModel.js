@@ -49,6 +49,17 @@ const updateUnitPrize = (unitId, newPrizeId) => {
   return unit;
 };
 
+const updatePrize = (id, updates = {}) => {
+  const prize = db.prizes.find(p => p.id === id);
+  if (!prize) return null;
+  
+  if (updates.name !== undefined) {
+    prize.name = updates.name;
+  }
+  
+  return prize;
+};
+
 const deletePrizeById = (prizeId) => {
   const prizeIdx = db.prizes.findIndex(p => p.id === prizeId);
   if (prizeIdx === -1) return null;
@@ -65,7 +76,8 @@ module.exports = {
   findPrizeById,
   findUnitById,
   deleteUnitById,
-  addUnitToPrize
-  ,deletePrizeById,
-  updateUnitPrize
+  addUnitToPrize,
+  deletePrizeById,
+  updateUnitPrize,
+  updatePrize
 };
