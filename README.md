@@ -1,29 +1,4 @@
-# API de Prêmios e Sorteios
 
-Projeto simples em Node.js/Express para acompanhar estoque de prêmios (unidades) e registrar sorteios.
-# API de Prêmios e Sorteios
-
-Projeto simples em Node.js/Express para acompanhar estoque de prêmios (unidades) e registrar sorteios.
-
-Principais características
-- Registro de admin (seeded: username: admin, password: admin)
-- Login com JWT (Bearer token)
-- Criar prêmio com quantidade (cada unidade é armazenada separadamente)
-- Listar prêmios com total em estoque
-- Buscar dados de um prêmio (inclui unidades restantes)
-- Deletar unidade (remove 1 unidade específica)
-- Registrar sorteio informando unitId e metadados (gender, neighborhood, program, age)
-- Listar sorteios com agregações por gender, neighborhood, program e faixas etárias
-- Deletar sorteio: unidade volta ao estoque
-- Documentação Swagger disponível em /docs
-
-Como executar
-
-1. Instale dependências
-
-```bash
-npm install
-```
 
 # PPP - Aplicação de Prêmios e Sorteios
 
