@@ -1,0 +1,12 @@
+FALTA 
+
+ - JMETER
+ - K6
+ - TODA A PARTE DE TECNICA DE TESTE
+ - WEB 
+    - MOCKOON
+    - CYPRESS
+    
+- CI/CD
+
+ 
