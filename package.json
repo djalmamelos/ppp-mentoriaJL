@@ -6,6 +6,7 @@
   "scripts": {
     "start-api": "node src/index.js",
     "start-web": "node web/index.js",
+    "test": "mocha ./test/**/*.test.js --timeout=2000 --reporter mochawesome",
     "dev": "nodemon src/index.js"
   },
   "author": "generated",
@@ -19,5 +20,12 @@
     "jsonwebtoken": "^9.0.0",
     "swagger-ui-express": "^4.6.3",
     "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "chai": "^6.2.0",
+    "dotenv": "^17.2.3",
+    "mocha": "^11.7.5",
+    "mochawesome": "^7.1.4",
+    "supertest": "^7.1.4"
   }
 }
